@@ -47,9 +47,30 @@ library(ncdf4)
 library(fields)
 library(kali)
 nc = nc_open("datos/sst.nc4")
+summary(nc)
+nc
 sst = ncvar_get(nc, "to")
 lat = ncvar_get(nc, "latitude")
 lon = ncvar_get(nc, "longitude") - 360
 image.map(lon, lat, sst[,,1])
+
+nc2 = nc_open("datos/ph.nc4")
+nc2
+ph = ncvar_get(nc2, "var name:to")
+lat = ncvar_get(nc2, "latitude")
+lon = ncvar_get(nc2, "longitude") - 360
+image.map(lon, lat, ph[,,1])
+
+
+nc1 = nc_open("datos/sss.nc4")
+nc1
+
+nc3 = nc_open("datos/sphy.nc4")
+nc3
+
+nc4 = nc_open("datos/lphy.nc4")
+nc4
+
+
 ```
 

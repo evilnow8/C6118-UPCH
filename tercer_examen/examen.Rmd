@@ -1,16 +1,112 @@
 ---
-title: "Análisis de las condiciones del océano frente a Perú durante mi primer año de vida"
-author: "Su nombre"
+title: "Análisis de la concentración de oxígeno durante los niños extraordinarios en función de la salinidad y la temperatura"
+author: "Pedro Antonio Espinoza Paredes"
 output: html_document
 ---
 
-## Introducción
+## 1. Introducción
 
-## Materiales y métodos
 
-## Resultados y discusión
+## 2. Materiales y metodología
 
-## Conclusiones
+Los materiales para el análisis de las condiciones oceanográficas fue la metadata proporcionada del archivo netCDF, que incluye datos *in situ* de temperatura superficial del mar (TSM), salinidad superficial del mar (SSM) en un período de 46 años desde 1959 hasta el año 2004, ubicados entre las longitudes: 69.5°W-93.5°W y la latitudes 6.5°N-20.5°S.
+Se requirió también la instalación del software de programación R con los paquetes ncdf4 `library(ncdf4)`, fields `library(fields)` y kali `library(kali)`.
 
-## Referencias
+```{r include=FALSE}
+library(ncdf4)
+library(fields)
+library(kali)
+```
+
+## 3. Resultados y discusión
+
+### 3.1 Temperatura Superficial del Mar durante el niño 82-83
+
+```{r setup,include=FALSE }
+#Se abre los datos de temperatura superficial del mar
+Temp = nc_open("datos/sst.nc4")
+TSM = ncvar_get(Temp, "to")
+lat = ncvar_get(Temp, "latitude")
+lon = ncvar_get(Temp, "longitude") - 360
+time = ncvar_get(Temp, "time")
+#Se calcula el promedio durante la duración del fenómeno del niño 82-83
+TSM_mean82 = apply(TSM[,,283:299], MARGIN = c(1,2), FUN = mean, na.rm = TRUE)
+image.map(lon, lat, TSM_mean82, main="Distribución de la TSM durante el niño extraordinario 82-83 (jul 82-nov 83)")
+```
+
+### 3.2 Temperatura Superficial del Mar durante el niño 97-98
+
+```{r}
+#Se abre los datos de temperatura superficial del mar
+Temp = nc_open("datos/sst.nc4")
+TSM = ncvar_get(Temp, "to")
+lat = ncvar_get(Temp, "latitude")
+lon = ncvar_get(Temp, "longitude") - 360
+time = ncvar_get(Temp, "time")
+#Se calcula el promedio durante la duración del fenómeno del niño 97-98
+TSM_mean97 = apply(TSM[,,459:477], MARGIN = c(1,2), FUN = mean, na.rm = TRUE)
+image.map(lon, lat, TSM_mean97, main="Distribución de la TSM durante el niño extraordinario 97-98 (mar 97-set 98)")
+```
+
+
+### 3.3 Salinidad superficial del Mar durante el niño extraordinario 82-83
+
+```{r}
+Sali = nc_open("datos/sss.nc4")
+SSM = ncvar_get(Sali, "so")
+lat = ncvar_get(Sali, "latitude")
+lon = ncvar_get(Sali, "longitude") - 360
+time = ncvar_get(Sali, "time")
+sali_mean82 = apply(SSM[,,283:299], MARGIN = c(1,2), FUN = mean, na.rm = TRUE)
+image.map(lon, lat, sali_mean82, main="Distribución de la Salinidad durante el niño extraordinario 82-83 (jul 82-nov 83)")
+```
+
+### 3.4 Salinidad superficial del Mar durante el niño extraordinario 97-98
+
+```{r}
+Sali = nc_open("datos/sss.nc4")
+SSM = ncvar_get(Sali, "so")
+lat = ncvar_get(Sali, "latitude")
+lon = ncvar_get(Sali, "longitude") - 360
+time = ncvar_get(Sali, "time")
+sali_mean97 = apply(SSM[,,459:477], MARGIN = c(1,2), FUN = mean, na.rm = TRUE)
+image.map(lon, lat, sali_mean97, main="Gráfica de Distribución de la Salinidad durante el niño extraordinario 97-98 (mar 97-set 98)")
+```
+
+
+### 3.5 Concentración de Oxígeno durante el fenómeno del niño 82-83
+
+```{r}
+Temp = nc_open("datos/sst.nc4")
+TSM = ncvar_get(Temp, "to")
+sstK82=TSM[,,283:299]+273
+Sali = nc_open("datos/sss.nc4")
+SSM = ncvar_get(Sali, "so")
+sss82=SSM[,,283:299]
+LNCoxi82=-173.9894+255.5907*(100/sstK82)+146.4813*log(sstK82/100)-22.2040*(sstK82/100)-sss82*(0.037362+0.016504*(sstK82/100)-0.0020564*(sstK82/100)^2)
+Coxi82=exp(LNCoxi82)
+typeof(Coxi82)
+
+```
+
+image.map(lon, lat, Coxi82, main="Distribución de la Concentración de Oxígeno durante el niño extraordinario 97-98 (mar 97-set 98)")
+
+
+### 3.6 Concentración de Oxígeno durante el fenómeno del niño 97-98
+
+```{r}
+sstK97=TSM[,,459:477]+273
+sss97=SSM[,,459:477]
+LNCoxi97=-173.9894+255.5907*(100/sstK82)+146.4813*log(sstK82/100)-22.2040*(sstK82/100)-sss82*(0.037362+0.016504*(sstK82/100)-0.0020564*(sstK82/                                                                                                                             100)^2)
+Coxi97=exp(LNCoxi97)
+```
+
+
+## 4. Conclusiones
+
+## 5. Referencias
+
+```
+config(user.name = "Pedro", user.email = "p.eswpinoza.p.12@gmail.com")
+```
 
